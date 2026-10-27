@@ -479,7 +479,16 @@ button {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
-  align-items: stretch;
+  align-items: start;
+}
+
+.category {
+  align-self: start;
+}
+
+.category-group {
+  align-self: start;
+  height: fit-content;
 }
 
 /* =========================================
