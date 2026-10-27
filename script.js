@@ -54,3 +54,232 @@ function render(query='') {
 }
 search.addEventListener('input',e=>render(e.target.value));
 render();
+
+/* =========================================
+   LIQUID GLASS MAGNIFIER
+   Kính lúp phóng đại nội dung dưới con trỏ
+   ========================================= */
+
+(() => {
+  function initLiquidGlassLens() {
+    // Tránh khởi tạo nhiều kính lúp nếu script được nạp lại
+    if (document.getElementById("liquid-glass-lens")) return;
+
+    const lens = document.createElement("div");
+    lens.id = "liquid-glass-lens";
+    lens.setAttribute("aria-hidden", "true");
+
+    const content = document.createElement("div");
+    content.className = "lens-content";
+    lens.appendChild(content);
+
+    document.body.appendChild(lens);
+
+    const isTouchDevice = window.matchMedia(
+      "(hover: none), (pointer: coarse)"
+    ).matches;
+
+    const magnification = isTouchDevice ? 1.65 : 1.8;
+
+    let lensPage = null;
+    let lastX = 0;
+    let lastY = 0;
+    let isPointerActive = false;
+    let rebuildFrame = 0;
+
+    function buildLensPage() {
+      if (lensPage) {
+        lensPage.remove();
+      }
+
+      // Sao chép nội dung trang để tạo vùng phóng đại
+      const clone = document.body.cloneNode(true);
+
+      // Loại bỏ kính lúp khỏi bản sao để tránh lồng kính vô hạn
+      clone.querySelectorAll("#liquid-glass-lens").forEach(el => el.remove());
+
+      // Không để JavaScript trong bản sao được thực thi
+      clone.querySelectorAll("script").forEach(el => el.remove());
+
+      // Không sao chép các thành phần dễ gây chồng lớp
+      clone.querySelectorAll("[popover]").forEach(el => {
+        el.removeAttribute("popover");
+      });
+
+      clone.classList.add("lens-page");
+
+      const pageWidth = document.documentElement.clientWidth;
+      const pageHeight = Math.max(
+        document.documentElement.scrollHeight,
+        window.innerHeight
+      );
+
+      Object.assign(clone.style, {
+        position: "absolute",
+        left: "0",
+        top: "0",
+        display: "block",
+        width: pageWidth + "px",
+        height: pageHeight + "px",
+        minHeight: pageHeight + "px",
+        maxWidth: "none",
+        margin: "0",
+        padding: "0",
+        overflow: "visible",
+        transformOrigin: "top left",
+        pointerEvents: "none",
+        zIndex: "1"
+      });
+
+      // Đồng bộ trạng thái các ô nhập liệu nếu có
+      const originals = document.body.querySelectorAll(
+        "input, textarea, select"
+      );
+      const copies = clone.querySelectorAll(
+        "input, textarea, select"
+      );
+
+      originals.forEach((original, index) => {
+        const copy = copies[index];
+        if (!copy) return;
+
+        if (original instanceof HTMLInputElement) {
+          copy.value = original.value;
+          copy.checked = original.checked;
+        } else if (original instanceof HTMLTextAreaElement) {
+          copy.value = original.value;
+          copy.textContent = original.value;
+        } else if (original instanceof HTMLSelectElement) {
+          copy.value = original.value;
+        }
+      });
+
+      content.appendChild(clone);
+      lensPage = clone;
+    }
+
+    function getLensSize() {
+      return lens.getBoundingClientRect().width || 150;
+    }
+
+    function updateLens(x, y) {
+      if (!lensPage) return;
+
+      lastX = x;
+      lastY = y;
+
+      const size = getLensSize();
+      const half = size / 2;
+      const scale = magnification;
+
+      lens.style.left = x + "px";
+      lens.style.top = y + "px";
+
+      // Đưa đúng vị trí nội dung dưới con trỏ vào tâm kính
+      lensPage.style.transform =
+        `translate(${half - x * scale}px, ` +
+        `${half - (y + window.scrollY) * scale}px) ` +
+        `scale(${scale})`;
+    }
+
+    function showLens(x, y) {
+      updateLens(x, y);
+      lens.classList.add("is-visible");
+    }
+
+    function hideLens() {
+      lens.classList.remove("is-visible");
+    }
+
+    function handlePointerMove(event) {
+      if (event.pointerType === "touch") {
+        if (isPointerActive) {
+          showLens(event.clientX, event.clientY);
+        }
+        return;
+      }
+
+      // Desktop: theo chuột hoặc bút cảm ứng
+      showLens(event.clientX, event.clientY);
+    }
+
+    function handlePointerDown(event) {
+      if (event.pointerType === "touch") {
+        isPointerActive = true;
+        showLens(event.clientX, event.clientY);
+      }
+    }
+
+    function handlePointerUp(event) {
+      if (event.pointerType === "touch") {
+        isPointerActive = false;
+        hideLens();
+      }
+    }
+
+    function rebuild() {
+      if (rebuildFrame) cancelAnimationFrame(rebuildFrame);
+
+      rebuildFrame = requestAnimationFrame(() => {
+        buildLensPage();
+        updateLens(lastX, lastY);
+        rebuildFrame = 0;
+      });
+    }
+
+    buildLensPage();
+
+    // Desktop và bút cảm ứng
+    document.addEventListener("pointermove", handlePointerMove, {
+      passive: true
+    });
+
+    // Điện thoại / máy tính bảng
+    document.addEventListener("pointerdown", handlePointerDown, {
+      passive: true
+    });
+
+    document.addEventListener("pointerup", handlePointerUp, {
+      passive: true
+    });
+
+    document.addEventListener("pointercancel", handlePointerUp, {
+      passive: true
+    });
+
+    // Ẩn kính khi chuột rời khỏi cửa sổ trình duyệt
+    document.addEventListener("pointerout", event => {
+      if (
+        event.pointerType !== "touch" &&
+        !event.relatedTarget
+      ) {
+        hideLens();
+      }
+    });
+
+    // Cập nhật tọa độ khi trang cuộn
+    window.addEventListener("scroll", () => {
+      if (!isTouchDevice || isPointerActive) {
+        updateLens(lastX, lastY);
+      }
+    }, { passive: true });
+
+    // Tạo lại bản sao khi đổi kích thước cửa sổ hoặc xoay điện thoại
+    window.addEventListener("resize", rebuild, { passive: true });
+
+    // Ẩn kính khi chuyển sang tab khác
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) hideLens();
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded",
+      initLiquidGlassLens,
+      { once: true }
+    );
+  } else {
+    initLiquidGlassLens();
+  }
+})();
