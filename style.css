@@ -1647,3 +1647,219 @@ footer {
     transform: none;
   }
 }
+
+/* =========================================
+   LIQUID GLASS - HIỆU ỨNG CHO MOBILE
+   ========================================= */
+
+@media (hover: none), (pointer: coarse) {
+
+  /* Thẻ danh mục */
+  .category:active,
+  .category-link:active {
+    transform: scale(0.975);
+    background: linear-gradient(
+      135deg,
+      #ffffff,
+      #fff5e6
+    );
+    border-color: #e7d2a6;
+    box-shadow:
+      0 5px 18px #5d17171c,
+      0 0 0 3px #c69a4518,
+      0 1px 0 #fff inset;
+    transition:
+      transform .12s ease,
+      background .12s ease,
+      box-shadow .12s ease;
+  }
+
+  /* Biểu tượng sáng và nổi khi nhấn */
+  .category:active .cat-icon,
+  .category-link:active .cat-icon {
+    transform: scale(1.06);
+    box-shadow:
+      0 0 0 4px #c69a4520,
+      0 8px 20px #6e3d1220;
+  }
+
+  /* Nút mở danh mục Dân sự */
+  .category-trigger:active {
+    background: #c69a4518;
+  }
+
+  /* Các danh mục con */
+  .sub-link:active {
+    background: #fff1d8;
+    color: var(--red);
+    transform: scale(0.985);
+    box-shadow: 0 4px 14px #5d171712;
+  }
+
+  /* Nút chính */
+  .primary:active,
+  .download:active {
+    transform: scale(0.97);
+    background: #fff4df;
+    box-shadow: 0 5px 16px #35000020;
+  }
+
+  /* Ô tìm kiếm */
+  .search-box:focus-within {
+    border-color: var(--gold);
+    box-shadow:
+      0 0 0 4px #c69a4522,
+      0 10px 25px #5d171712;
+  }
+
+  /* Bảng thông tin và các khối hướng dẫn */
+  .hero-panel:active,
+  .guide-grid > div:active,
+  .submit-guide:active {
+    box-shadow:
+      0 8px 24px #5d17171c,
+      0 1px 0 #fff inset;
+  }
+
+  /* Chạm vào liên kết điều hướng */
+  .nav a:active {
+    background: #ffffff20;
+  }
+}
+
+/* =========================================
+   LIQUID GLASS MAGNIFIER - KÍNH LÚP GIỌT NƯỚC
+   ========================================= */
+
+#liquid-glass-lens {
+  --lens-size: 150px;
+
+  position: fixed;
+  z-index: 99999;
+  left: 0;
+  top: 0;
+  width: var(--lens-size);
+  height: var(--lens-size);
+  border-radius: 50%;
+  overflow: hidden;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  transform: translate3d(-50%, -50%, 0) scale(.82);
+  transform-origin: center;
+  transition:
+    opacity .16s ease,
+    transform .16s ease;
+  background: #ffffff18;
+  border: 1px solid #ffffffdc;
+  box-shadow:
+    0 12px 35px #18070730,
+    0 0 0 2px #ffffff35,
+    0 0 18px #ffffff45,
+    inset 0 0 0 1px #ffffff70,
+    inset 0 0 18px #ffffff40;
+  -webkit-backdrop-filter: blur(1px) saturate(160%);
+  backdrop-filter: blur(1px) saturate(160%);
+  contain: strict;
+}
+
+#liquid-glass-lens.is-visible {
+  visibility: visible;
+  opacity: 1;
+  transform: translate3d(-50%, -50%, 0) scale(1);
+}
+
+#liquid-glass-lens::before {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      ellipse at 28% 18%,
+      #ffffffa8 0,
+      #ffffff40 12%,
+      transparent 38%
+    ),
+    linear-gradient(
+      135deg,
+      #ffffff28 0%,
+      transparent 40%,
+      #ffffff12 65%,
+      #ffffff50 100%
+    );
+  box-shadow:
+    inset 0 2px 4px #ffffffbd,
+    inset 2px 0 4px #ffffff70,
+    inset -2px -3px 6px #ffffff45;
+}
+
+#liquid-glass-lens::after {
+  content: "";
+  position: absolute;
+  z-index: 4;
+  top: 5%;
+  left: 16%;
+  width: 36%;
+  height: 12%;
+  border-radius: 50%;
+  background: #ffffffbd;
+  filter: blur(5px);
+  transform: rotate(-35deg);
+  opacity: .8;
+}
+
+#liquid-glass-lens .lens-content {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+#liquid-glass-lens .lens-page {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 0;
+  padding: 0;
+  transform-origin: top left;
+  pointer-events: none;
+}
+
+/* Bản sao trong kính cần giữ màu chữ và hình dạng gần bản gốc */
+#liquid-glass-lens .lens-page *,
+#liquid-glass-lens .lens-page *::before,
+#liquid-glass-lens .lens-page *::after {
+  animation: none !important;
+  caret-color: transparent !important;
+  cursor: default !important;
+}
+
+/* Desktop: kính lớn hơn */
+@media (hover: hover) and (pointer: fine) {
+  #liquid-glass-lens {
+    --lens-size: 160px;
+  }
+}
+
+/* Mobile: kính nhỏ gọn, không che quá nhiều nội dung */
+@media (hover: none), (pointer: coarse) {
+  #liquid-glass-lens {
+    --lens-size: 125px;
+    box-shadow:
+      0 8px 24px #18070728,
+      0 0 0 2px #ffffff40,
+      inset 0 0 0 1px #ffffff80;
+  }
+}
+
+/* Tôn trọng cài đặt giảm chuyển động */
+@media (prefers-reduced-motion: reduce) {
+  #liquid-glass-lens {
+    transition: none;
+  }
+}
