@@ -1032,3 +1032,51 @@ footer{
 .forms .form-grid {
   align-items: stretch;
 }
+
+/* Đồng bộ chiều cao các ô danh mục trên màn hình nhỏ */
+@media (max-width: 600px) {
+  #categoryGrid {
+    align-items: stretch;
+  }
+
+  #categoryGrid > .category {
+    min-width: 0;
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  #categoryGrid > .category > .category-trigger,
+  #categoryGrid > .category.category-link {
+    box-sizing: border-box;
+    height: 100%;
+    min-height: 116px;
+    padding: 16px 12px;
+    gap: 10px;
+    align-items: center;
+  }
+
+  #categoryGrid .cat-copy {
+    flex: 1;
+    min-width: 0;
+  }
+
+  #categoryGrid .cat-copy b {
+    display: block;
+    line-height: 1.35;
+    overflow-wrap: break-word;
+  }
+
+  #categoryGrid .cat-copy small {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    line-height: 1.4;
+  }
+
+  #categoryGrid .cat-copy .drive-label {
+    display: block;
+    margin-top: 6px;
+    line-height: 1.35;
+  }
+}
