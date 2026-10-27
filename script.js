@@ -79,7 +79,7 @@ render();
       "(hover: none), (pointer: coarse)"
     ).matches;
 
-    const magnification = isTouchDevice ? 1.65 : 1.8;
+    const magnification = isTouchDevice ? 1.35 : 1.4;
 
     let lensPage = null;
     let lastX = 0;
