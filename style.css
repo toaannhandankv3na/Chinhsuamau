@@ -106,7 +106,7 @@ button {
 
 .gov-inner span:first-child {
   font-weight: 800;
-  color: #ffe1a2;
+  color: #a91919;
 }
 
 /* =========================================
@@ -1282,19 +1282,21 @@ footer {
 
 @media (max-width: 760px) {
 
-  .gov-inner {
-    min-height: 32px;
-    justify-content: center;
-    flex-direction: column;
-    gap: 0;
-    padding: 5px 0;
-    text-align: center;
-    line-height: 1.5;
-  }
+  
+.gov-inner {
+  min-height: 32px;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 0;
+  text-align: center;
+  line-height: 1.5;
+}
 
-  .gov-inner span:nth-child(2) {
-    display: none;
-  }
+.gov-inner span:nth-child(2) {
+  display: inline;
+}
 
   .header-main {
     height: 82px;
