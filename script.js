@@ -162,25 +162,28 @@ render();
       return lens.getBoundingClientRect().width || 150;
     }
 
-    function updateLens(x, y) {
-      if (!lensPage) return;
+    
+function updateLens(x, y) {
+  if (!lensPage) return;
 
-      lastX = x;
-      lastY = y;
+  lastX = x;
+  lastY = y;
 
-      const size = getLensSize();
-      const half = size / 2;
-      const scale = magnification;
+  const size = getLensSize();
+  const half = size / 2;
+  const scale = magnification;
 
-      lens.style.left = x + "px";
-      lens.style.top = y + "px";
+  lens.style.left = x + "px";
+  lens.style.top = y + "px";
 
-      // Đưa đúng vị trí nội dung dưới con trỏ vào tâm kính
-      lensPage.style.transform =
-        `translate(${half - x * scale}px, ` +
-        `${half - (y + window.scrollY) * scale}px) ` +
-        `scale(${scale})`;
-    }
+  // Dùng vị trí cuộn hiện tại để tính tọa độ nội dung
+  const pageX = x + window.scrollX;
+  const pageY = y + window.scrollY;
+
+  lensPage.style.transform =
+    `translate(${half - pageX * scale}px, ` +
+    `${half - pageY * scale}px) scale(${scale})`;
+}
 
     function showLens(x, y) {
       updateLens(x, y);
@@ -228,6 +231,25 @@ render();
     }
 
     buildLensPage();
+    
+  // Theo dõi thay đổi bố cục, ví dụ khi mở rộng danh mục Dân sự
+  let layoutTimer;
+
+  const layoutObserver = new MutationObserver(() => {
+    clearTimeout(layoutTimer);
+
+    layoutTimer = setTimeout(() => {
+      buildLensPage();
+      updateLens(lastX, lastY);
+    }, 100);
+  });
+
+  layoutObserver.observe(document.getElementById("categoryGrid") || document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ["class", "hidden", "aria-expanded"]
+  });
 
     // Desktop và bút cảm ứng
     document.addEventListener("pointermove", handlePointerMove, {
