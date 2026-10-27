@@ -1016,3 +1016,19 @@ footer{
     transform:none;
   }
 }
+
+/* Đồng bộ kích thước các ô tra cứu */
+.forms .category-card,
+.forms .form-card,
+.forms .category-item {
+  box-sizing: border-box;
+  height: 100%;
+  min-height: 0;
+}
+
+/* Giữ các ô cùng chiều cao trong lưới */
+.forms .grid,
+.forms .categories,
+.forms .form-grid {
+  align-items: stretch;
+}
