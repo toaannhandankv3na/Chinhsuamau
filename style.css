@@ -1033,18 +1033,27 @@ footer{
   align-items: stretch;
 }
 
-/* Đồng bộ kích thước các ô tra cứu */
-.forms .category-card,
-.forms .form-card,
-.forms .category-item {
-  box-sizing: border-box;
-  height: 100%;
-  min-height: 0;
-}
+/* Fix ô Dân sự khi màn hình nhỏ */
+@media (max-width: 760px) {
+  .forms .category-card,
+  .forms .form-card,
+  .forms .category-item {
+    min-width: 0;
+    box-sizing: border-box;
+  }
 
-/* Giữ các ô cùng chiều cao trong lưới */
-.forms .grid,
-.forms .categories,
-.forms .form-grid {
-  align-items: stretch;
+  .forms .category-card *,
+  .forms .form-card *,
+  .forms .category-item * {
+    overflow-wrap: normal;
+    word-break: keep-all;
+  }
+
+  .forms .category-card,
+  .forms .form-card,
+  .forms .category-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
