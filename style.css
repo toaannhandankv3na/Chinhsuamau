@@ -1732,7 +1732,7 @@ footer {
    ========================================= */
 
 #liquid-glass-lens {
-  --lens-size: 150px;
+  --lens-size: 34px;
 
   position: fixed;
   z-index: 99999;
@@ -1842,14 +1842,14 @@ footer {
 /* Desktop: kính lớn hơn */
 @media (hover: hover) and (pointer: fine) {
   #liquid-glass-lens {
-    --lens-size: 160px;
+    --lens-size: 36px;
   }
 }
 
 /* Mobile: kính nhỏ gọn, không che quá nhiều nội dung */
 @media (hover: none), (pointer: coarse) {
   #liquid-glass-lens {
-    --lens-size: 125px;
+    --lens-size: 48px;
     box-shadow:
       0 8px 24px #18070728,
       0 0 0 2px #ffffff40,
