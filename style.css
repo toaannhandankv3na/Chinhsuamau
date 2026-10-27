@@ -319,10 +319,31 @@ body:after{
 
 /* Danh sách biểu mẫu */
 
+/* Nền liền mạch cho khu vực Tra cứu Hệ thống biểu mẫu */
 .forms{
   position:relative;
+  isolation:isolate;
   padding:70px 0;
-  background:linear-gradient(180deg,#fffaf7f5 0%,#fff8f4f8 100%);
+  background:linear-gradient(180deg,#fffaf7 0%,#fff8f4 100%);
+}
+
+.forms:before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  top:0;
+  bottom:0;
+  left:50%;
+  width:100vw;
+  transform:translateX(-50%);
+  background:linear-gradient(180deg,#fffaf7 0%,#fff8f4 100%);
+  pointer-events:none;
+}
+
+@media(max-width:760px){
+  .forms{
+    padding:48px 0;
+  }
 }
 
 .section-head{
